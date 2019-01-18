@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>1</title>
+</head>
+
+<body>
+    <script>
+        console.clear();
+
+        // Базовый класс контейнер
+        function Container(id, className, childrenItems) {
+            this.id = id;
+            this.className = className;
+            this.children = childrenItems;
+            this.htmlCode = "<div id='%id%' class='%class%'>%children%</div>";
+        }
+        Container.prototype.render = function() {
+            var childrenHtml = "";
+            for (var i in this.children)
+                childrenHtml += this.children[i].render();
+
+            return this.htmlCode
+                .replace('%id%', this.id)
+                .replace('%class%', this.className)
+                .replace('%children%', childrenHtml);
+        };
+        Container.prototype.remove = function() {
+            document.getElementById(this.id).remove();
+        };
+
+        // Мы сделали один умный универасальный базовый класс - контейнер.
+
+        // Класс меню, наследуется от Container
+        function Menu(id, menuItems) {
+            Container.call(this, id, null, menuItems);
+            this.htmlCode = "<ul id='%id%' class='menu'>%children%</ul>";
+        }
+        Menu.prototype = Object.create(Container.prototype);
+        Menu.prototype.applyNewData = function(xhr) {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var newMenuItems = [];
+                    var items = JSON.parse(xhr.responseText);
+                    console.log(items);
+                    for (var i in items['menu_items']) {
+                        var newItem = items['menu_items'][i];
+                        var subItemArr = [];
+                        if (newItem.subItems) {
+                            for (var j in newItem.subItems) {
+                                subItemArr.push(new MenuSubItem(newItem.subItems[j].id, newItem.subItems[j].href, newItem.subItems[j].title));
+                            }
+                        }
+                        newMenuItems.push(new MenuItem('item' + i, newItem.href, newItem.title, subItemArr));
+                    }
+                    this.children = newMenuItems;
+                } else {
+                    alert('Ошибка выполнения запроса.');
+                }
+
+                document.getElementById(this.id).remove();
+                document.write(this.render());
+            }
+        }
+        Menu.prototype.constructor = Menu;
+
+        // Класс элемента меню, наследуется от Container
+        function MenuItem(id, href, title, subItems) {
+            Container.call(this, id, null, subItems);
+            this.href = href;
+            this.title = title;
+            this.htmlCode = "<li id='%id%' class='menu_item'><a href='" + this.href + "'>" + this.title + "</a><ul class='submenu'>%children%</ul></li>";
+        }
+        MenuItem.prototype = Object.create(Container.prototype);
+        MenuItem.prototype.constructor = MenuItem;
+
+        // Класс элемента подменю, наследуется от MenuItem
+        function MenuSubItem(id, href, title) {
+            MenuItem.call(this, id, href, title, []);
+            this.htmlCode = "<li id='%id%' class='menu_subitem'><a href='" + this.href + "'>" + this.title + "</a></li>";
+        }
+        MenuSubItem.prototype = Object.create(MenuItem.prototype);
+        MenuSubItem.prototype.constructor = MenuSubItem;
+
+        // Построение меню
+
+        var subItem1 = new MenuSubItem('subitem1', '/sub1', 'Подраздел 1');
+        var subItem2 = new MenuSubItem('subitem2', '/sub1', 'Подраздел 2');
+
+        var item1 = new MenuItem('item1', '/', 'Главная', [subItem1, subItem2]);
+        var item2 = new MenuItem('item2', '/catalog', 'Каталог', []);
+        var item3 = new MenuItem('item3', '/contacts', 'Контакты', []);
+        var items = [item1, item2, item3];
+
+        var menu = new Menu('my_menu', items);
+
+        document.write(menu.render());
+
+        // Обновление меню
+
+        var xhr = false;
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+            if (xhr.overrideMimeType)
+                xhr.overrideMimeType('text/xml');
+            else if (window.ActiveXObject) {
+                try {
+                    xhr = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    try {
+                        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (e) {}
+                }
+            }
+        }
+        if (!xhr) {
+            alert('Ошибка : невозможно создать запрос');
+        }
+
+        var m_items;
+        xhr.onreadystatechange = function() {
+            menu.applyNewData(xhr);
+        };
+        xhr.ontimeout = function() {
+            alert('Превышено время ожидания запроса');
+        };
+        xhr.open('GET', 'https://gist.githubusercontent.com/levitzky1983/7ec51dba0432a67eb1cb013af1ce81ed/raw/89afaf683810e6d47ff067596db7f158606d1595/menu.json', true);
+        xhr.send(null);
+
+    </script>
+</body>
+
+</html>

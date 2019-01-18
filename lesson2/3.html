@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>3</title>
+</head>
+
+<body>
+    <button id="btn1">success</button>
+    <button id="btn2">error</button>
+    <p class="answer"></p>
+
+    <script>
+        console.clear();
+        let btn1 = document.querySelector("#btn1");
+        let btn2 = document.querySelector("#btn2");
+        let answer = document.querySelector(".answer");
+        btn1.addEventListener("click", addAnswer);
+        btn2.addEventListener("click", addAnswer);
+
+        function addAnswer() {
+            let id = this.id;
+            console.log(id);
+            var href = "";
+            if (id == "btn1") {
+                href = "https://gist.githubusercontent.com/levitzky1983/b89a1a09d5ba7e5b298684b749b75db9/raw/fddba23f70822a0290461e908d1acf072d56fe14/success";
+            } else if (id == "btn2") {
+                href = "https://gist.githubusercontent.com/levitzky1983/e954e5231dcaaa4b8478ace989b888ff/raw/237e0dbed71053b4125d1776e20e1b057cd7e98f/error";
+            }
+            console.log(href);
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+                if (xhr.overrideMimeType)
+                    xhr.overrideMimeType('text/xml');
+                else if (window.ActiveXObject) {
+                    try {
+                        xhr = new ActiveXObject("Msxml2.XMLHTTP");
+                    } catch (e) {
+                        try {
+                            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                        } catch (e) {}
+                    }
+                }
+            }
+            if (!xhr) {
+                alert('Ошибка : невозможно создать запрос');
+            }
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var message = JSON.parse(xhr.responseText);
+                        answer.innerText = message.result;
+                    } else {
+                        alert('Ошибка выполнения запроса.');
+                    }
+
+                }
+            };
+            xhr.ontimeout = function() {
+                alert('Превышено время ожидания запроса');
+            };
+            xhr.open('GET', href, true);
+            xhr.send(null);
+        }
+
+    </script>
+</body>
+
+</html>

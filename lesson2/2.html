@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>2</title>
+</head>
+
+<body>
+    <div class="prev"></div>
+    <div class="slider"></div>
+    <script>
+        console.clear();
+        var gallery = document.querySelector(".prev");
+        var slider = document.querySelector(".slider");
+
+        //var xhr = false;
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+            if (xhr.overrideMimeType)
+                xhr.overrideMimeType('text/xml');
+            else if (window.ActiveXObject) {
+                try {
+                    xhr = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    try {
+                        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (e) {}
+                }
+            }
+        }
+        if (!xhr) {
+            alert('Ошибка : невозможно создать запрос');
+        }
+
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    //var galleryArr = [];
+                    var imageCase = JSON.parse(xhr.responseText);
+                    console.log(imageCase.images[1].src);
+                    setPrevGallery(imageCase);
+                    // setSlider(imageCase);
+
+                } else {
+                    alert('Ошибка выполнения запроса.');
+                }
+
+            }
+        };
+        xhr.ontimeout = function() {
+            alert('Превышено время ожидания запроса');
+        };
+        xhr.open('GET', 'https://gist.githubusercontent.com/levitzky1983/7ec51dba0432a67eb1cb013af1ce81ed/raw/6939d20800af0438421422503051981ecf894907/gallery.json', true);
+        xhr.send(null);
+
+
+        function setPrevGallery(obj) {
+            for (var i in obj.images) {
+                var img_prev = document.createElement("img");
+                img_prev.classList.add("img_prev");
+                img_prev.width = 150;
+                img_prev.height = 150;
+                img_prev.src = obj.images[i].src;
+                img_prev.alt = obj.images[i].alt;
+                img_prev.onclick = getFullImage;
+                gallery.appendChild(img_prev);
+            }
+
+        }
+
+        function getFullImage(event) {
+            var divRemove = document.querySelector(".img_full");
+            if (divRemove) {
+                slider.removeChild(divRemove);
+            }
+            var img = document.createElement("img");
+            img.classList.add("img_full");
+            img.width = 900;
+            img.height = 900;
+            img.src = event.target.src;
+            img.alt = event.target.alt;
+            slider.appendChild(img);
+        }
+
+    </script>
+</body>
+
+</html>
