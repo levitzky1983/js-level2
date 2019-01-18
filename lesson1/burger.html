@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>burger</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div class="block">
+            <label> Размер бургера:
+                <select id="size">
+                    <option value="SIZE_SMALL">Маленький</option>
+                    <option value="SIZE_LARGE">Большой</option>
+                </select>
+            </label>
+        </div>
+        <div class="block">
+            <label> Начинка бургера:
+                <select id="stuffing">
+                    <option value="STUFFING_CHEESE">Сыр</option>
+                    <option value="STUFFING_SALAD">Салат</option>
+                    <option value="STUFFING_POTATO">Картофель</option>
+                </select>
+            </label>
+        </div>
+        <div class="block">
+            <label> Приправа:
+                <input type="checkbox" name="Приправа" id="TOPPING_SPICE"> </label>
+            <label> Майонез:
+                <input type="checkbox" name="Майонез" id="TOPPING_MAYO"> </label>
+        </div>
+        <div class="block">
+            <button id="submit">Рассчитать</button>
+        </div>
+        <div class="block">
+            <p id="price"></p>
+            <p id="calories"></p>
+        </div>
+    </div>
+    <script>
+        console.clear();
+
+        function Burger(size, stuffing) {
+            this.size = sizes[size]; //Вот здесь не понял почему sizes[size], а не sizes.size(получил методом проб и ошибок)
+            // alert(this.size.price);
+            this.stuffing = stuffings[stuffing];
+            this.toppings = [];
+        }
+        Burger.prototype.addTopping = function(topping) {
+            // alert(toppings[topping]);
+            this.toppings.push(toppings[topping]);
+            //return toppings[topping];
+            // alert(this.toppings[0].price);
+        }
+
+        Burger.prototype.calculatedPrice = function() {
+            let result = this.size.price + this.stuffing.price;
+            // alert(Burger.calculatedPrice());
+            for (let i in this.toppings) {
+                //  alert(this.toppings[i].price);
+                result += this.toppings[i].price;
+            }
+            return result;
+        }
+        Burger.prototype.calculatedCal = function() {
+            let result = this.size.cal + this.stuffing.cal;
+            for (let i in this.toppings) {
+                result += this.toppings[i].cal;
+            }
+            return result;
+        }
+
+
+        function BaseStuffing(name, price, cal) {
+            this.name = name;
+            this.price = price;
+            this.cal = cal;
+        }
+
+        function Sizes(name, price, cal) {
+            BaseStuffing.apply(this, arguments);
+        }
+
+        function Stuffing(name, price, cal) {
+            BaseStuffing.apply(this, arguments);
+        }
+
+        function Topping(name, price, cal) {
+            BaseStuffing.apply(this, arguments);
+        }
+
+        var stuffings = {
+            STUFFING_CHEESE: new Stuffing("Cheese", 10, 20),
+            STUFFING_SALAD: new Stuffing("Salad", 20, 5),
+            STUFFING_POTATO: new Stuffing("Potato", 15, 10),
+        };
+        var toppings = {
+            TOPPING_MAYO: new Topping("Mayones", 20, 5),
+            TOPPING_SPICE: new Topping("Spice", 15, 0),
+        };
+        var sizes = {
+            SIZE_SMALL: new Sizes("Small", 50, 20),
+            SIZE_LARGE: new Sizes("Big", 100, 40),
+        };
+
+
+
+        document.getElementById('submit').onclick = function() {
+            //alert(sizes.SIZE_SMALL.price);
+            let size = document.getElementById('size').value;
+            // alert(size);
+            let stuffing = document.getElementById('stuffing').value;
+            let mayo, spice;
+            if (document.getElementById('TOPPING_SPICE').checked) {
+                spice = "TOPPING_SPICE";
+                // alert(toppings[spice]);
+            }
+            if (document.getElementById('TOPPING_MAYO').checked) {
+                mayo = "TOPPING_MAYO";
+            }
+            let burger = new Burger(size, stuffing);
+
+            if (spice) {
+                burger.addTopping(spice);
+            }
+            if (mayo) {
+                burger.addTopping(mayo);
+            }
+
+            document.getElementById('price').innerText = "Итого " + burger.calculatedPrice() + ' рублей';
+            document.getElementById('calories').innerText = "Итого " + burger.calculatedCal() + ' калорий';
+        };
+
+
+        //Вообщем из задания не понял половину страшных слов. Сделал как смог.
+
+    </script>
+</body>
+
+</html>
