@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .red-border{
+          border:2px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <form method="post">
+        <label for="#name">ФИО</label>
+        <p><input type="text" name="ФИО" id="name" placeholder="Иванов Иван Иванович" oninput="onblurReg(this.id)"></p> <br>
+        <label for="#phone">Телефон</label>
+        <p><input type="text" name="Телефон" id="phone" placeholder="+7(000)000-0000" oninput="onblurReg(this.id)"></p> <br>
+        <label for="#email">Почта</label>
+        <p><input type="text" name="Email" id="email" placeholder="email@xxxxxx.xx" oninput="onblurReg(this.id)"></p><br>
+        <label for="#city">Город</label>
+        <p><select id="city">
+                <option disabled selected>Выберите город</option>
+            </select>
+        </p><br>
+        <!--<label for="city_auto">Введите город</label>
+        <p><input type="text" name="city" id="email" placeholder="название города"></p><br> -->
+        <p>Комментарий</p>
+        <textarea name="comment" id="comment" cols="30" rows="10"></textarea> <br>
+        <input type="submit" id="submit" onclick="return regular()" value="Отправить">
+        <input type="reset">
+    </form>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        console.clear();
+
+        function onblurReg(id) {
+            let div = $("#" + id);
+            console.log(id);
+            let regExp;
+            switch (id) {
+                case "name":
+                    regExp = /^[A-ZА-Я][a-zа-я]+\s[A-ZА-Я][a-zа-я]+\s[A-ZА-Я][a-zа-я]+$/;
+                    break;
+                case "phone":
+                    regExp = /^\+7\(\d{3}\)\d{3}\-\d{4}$/;
+                    break;
+                case "email":
+                    regExp = /^[A-Za-z0-9]+.[A-Za-z0-9]+@[A-Za-z]+\.[A-Za-z]{2,6}$/;
+                    break;
+
+            }
+            let result = regExp.test(div.val());
+            if (!result) {
+
+                //alert('Некорректно введены данные');
+                div.addClass("red-border");
+            } else {
+                div.removeClass("red-border");
+            }
+        }
+
+
+
+        function regular() {
+            var arr = document.querySelectorAll("input[type='text']");
+            var post = true;
+            for (var elem of arr) {
+                if (elem.classList.contains("red-border") || elem.value == "") {
+                    post = false;
+                    var errorId = elem.id;
+                    alert("Введите корректные данные в поле " + elem.name);
+                    elem.value = '';
+                    elem.placeholder = "Введите корректные данные";
+                    console.log(elem.value);
+                }
+
+            }
+            if (post) {
+                alert("Данные успешно отправлены");
+            }
+            return post;
+        }
+
+        var citiesAll = [];
+        $.ajax({
+
+            url: 'https://raw.githubusercontent.com/levitzky1983/git-practic/master/cities.json',
+            dataType: "json",
+            success: function(data) {
+                //console.log(data.cities[0]);
+                $.each(data.cities, function(i, val) {
+
+                    citiesAll.push(val.name);
+                    console.log(val.name);
+
+                    $("#city").append("<option value=" + val.name + ">" + val.name + "</option>");
+
+                });
+            }
+        });
+        console.log(citiesAll);
+
+
+
+
+
+        /*$("#city").change(function(){
+          console.log(this.value);
+          this.attr("selected");
+          
+        });*/
+
+    </script>
+</body>
+
+</html>
