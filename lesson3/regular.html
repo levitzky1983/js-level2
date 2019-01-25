@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Regular</title>
+    <style>
+        .bold{
+          font-weight: 900;
+        }
+        .red-border{
+           border:2px solid red;
+        }    
+    </style>
+</head>
+
+<body>
+    <p id="text">Lorem aren't ipsum' dolor 'sit amet consectetur' adipisicing elit. Non aut doloremque 'eligendi explicabo' ratione cumque eum deleniti dolore voluptate nam ad dolorem, sit, est odit, voluptatum eius quidem eveniet adipisci omnis consectetur <span class="bold">aren't</span> voluptatibus! Magni modi necessitatibus doloribus dolore itaque obcaecati repellendus accusantium nisi, deserunt voluptatibus aperiam ad eum, corporis magnam? Officiis natus quaerat commodi neque, tenetur 'nihil at aperiam aspernatur porro illum. Nobis ex labore inventore voluptatibus obcaecati vitae beatae animi quibusdam numquam, in tempora a veritatis, commodi aspernatur dolorem debitis. Nobis veniam suscipit id illum tempora vitae, eos deleniti nisi, autem asperiores minima saepe quidem! Voluptas, temporibus at! Aperiam!</p>
+    <form id="form">
+        <label for="#name">ФИО</label>
+        <input type="text" name="ФИО" id="name" placeholder="Иванов Иван Иванович" oninput="onblurReg(this.id)"> <br><br>
+        <label for="#phone">Телефон</label>
+        <input type="text" name="Телефон" id="phone" placeholder="+7(000)000-0000" oninput="onblurReg(this.id)"> <br><br>
+        <label for="#email">Почта</label>
+        <input type="text" name="Email" id="email" placeholder="email@xxxxxx.xx" oninput="onblurReg(this.id)"> <br><br>
+        <p>Комментарий</p>
+        <textarea name="comment" id="comment" cols="30" rows="10"></textarea> <br>
+        <input type="submit" id="submit" onclick="regular()" value="Отправить">
+        <input type="reset">
+    </form>
+    <script>
+        //console.clear();
+        var text = document.querySelector("#text");
+        //console.log(text);
+        var reg = /\s'|'\s/g;
+        var replaced = text.innerText.replace(reg, "\"");
+        text.innerText = replaced;
+
+
+        //---------------------------//
+
+        function onblurReg(id) {
+            let div = document.querySelector("#" + id);
+            let regExp;
+            switch (id) {
+                case "name":
+                    regExp = /^[A-ZА-Я][a-zа-я]+\s[A-ZА-Я][a-zа-я]+\s[A-ZА-Я][a-zа-я]+$/;
+                    break;
+                case "phone":
+                    regExp = /^\+7\(\d{3}\)\d{3}\-\d{4}$/;
+                    break;
+                case "email":
+                    regExp = /^\w+@[A-Za-z]+\.[A-Za-z]{2,6}$/;
+                    break;
+
+            }
+            let result = regExp.test(div.value);
+            if (!result) {
+                //alert('Некорректно введены данные');
+                div.classList.add("red-border");
+            } else {
+                div.classList.remove("red-border");
+            }
+        }
+
+        function regular() {
+            var arr = document.querySelectorAll("input[type='text']");
+            //console.log(arr);
+            var post = true;
+            for (var elem of arr) {
+                // console.log(elem);
+                if (elem.classList.contains("red-border") || elem.value == "") {
+                    post = false;
+                    // alert("Введите корректные данные в поле "+elem.name);
+                    // console.log("Введите корректные данные");
+                }
+            }
+            if (post) {
+                //document.querySelector("#form").method = "post";
+                document.querySelector("#form").action = "#";
+                console.log(document.querySelector("#form"));
+                console.log("++++");
+                alert("Данные отправлены");
+            } else {
+                alert("Введите корректные данные");
+                console.log(document.querySelector("#form"));
+            }
+        }
+
+    </script>
+</body>
+
+</html>
