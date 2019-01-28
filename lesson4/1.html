@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="main">
+        <div class="menu">
+            <input id="block_1" type="button" value="первый параграф" onclick="show(event)">
+            <input id="block_2" type="button" value="второй параграф" onclick="show(event)">
+            <input id="block_3" type="button" value="третий параграф" onclick="show(event)">
+        </div>
+        <div id="box_1" class="box">
+            <p>Первый текcт</p>
+        </div>
+        <div id="box_2" class="box">
+            <p>Второй текст</p>
+        </div>
+        <div id="box_3" class="box">
+            <p>Третий текст</p>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        console.clear();
+        $('.box').toggle(1000);
+
+        function show(e) {
+            //console.log(e.target.id);
+            $('.box').hide();
+            let id = e.target.id.replace('block', 'box');
+            //console.log(id);
+            $('#' + id).toggle(1000);
+        }
+
+    </script>
+</body>
+
+</html>
