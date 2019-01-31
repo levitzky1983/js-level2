@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+       .modul {
+         display: flex;
+         flex-direction: row;
+         flex-wrap:wrap;
+         justify-content: center;
+         width:80%;
+         padding:20px;
+         border:2px solid black;
+         border-radius: 5px;
+       }
+       .modul>textarea {
+         margin: 20px;
+         width:100%;
+       }
+       .modul>input {
+         height: 20px;
+         margin-left:20px;
+         margin-right:20px;
+       
+       }
+
+       .comment{
+         border: 2px solid green;
+         width: 80%;
+         margin-bottom:20px;
+         padding: 20px;
+       }
+       .author{
+         font-size: 12px;
+         color: gray;
+         display:flex;
+         justify-content: flex-end;
+       }
+
+       .moderate{
+         display: flex;
+         justify-content: space-around;
+       }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div id="comments"></div>
+        <form class="modul" action="#" id="append_comment" onsubmit="return false">
+            <textarea name="Comment" id="newComment" rows="10"></textarea>
+            <label for="author">Введите ваше имя</label>
+            <input type="text" id="author" placeholder="Ваше имя" required>
+            <button id="append_btn">Добавить отзыв</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        console.clear();
+
+        var textAreaComment = $("#newComment");
+        var authorComment = $("#author");
+        var btnAppend = $("#append_btn");
+        var commentsAll = $("#comments");
+        var commentId = 0;
+
+        //создали базовый модуль
+        function BaseModule(id, author, text, moderate) {
+            this.id = id;
+            this.author = author;
+            this.text = text;
+            this.moderate = moderate;
+        }
+
+        BaseModule.prototype.render = function() {
+            var htmlCode = "<div class='comment' id =" + this.id + "><p class = 'text'>" + this.text + "<p class='author'>" + this.author + "</p></p><div class='moderate'><button id ='approveComment-" + this.id + "' onclick = 'approveComment(" + this.id + ")'>Одобрить</button><button id='deleteComment-" + this.id + "' onclick='deleteComment(" + this.id + ")'>Удалить</button></div>";
+            return htmlCode;
+        }
+        //наследуем класс Comments от базового
+        function Comment(id, author, text, moderate) {
+            BaseModule.call(this, id, author, text, moderate);
+        }
+        Comment.prototype = Object.create(BaseModule.prototype);
+
+        //При загрузке документа отрисовываем все существующие отзывы
+        $(document).ready(function() {
+            $.get('https://raw.githubusercontent.com/levitzky1983/git-practic/master/modul_get.json', function(data) {
+                var response = JSON.parse(data);
+                if (response.result === 1) {
+                    for (item of response.comments) {
+                        commentId++;
+                        var newItem = new Comment(commentId, item.autor, item.text, item.moderate);
+                        var comments = commentsAll.html();
+                        comments += newItem.render();
+                        commentsAll.html(comments);
+                        if (item.moderate) {
+                            approveComment(commentId);
+                        }
+                    }
+                } else {
+                    alert("Ошибка запроса");
+                }
+            });
+        });
+
+        //метод добавления отзыва
+        Comment.prototype.addComment = function() {
+            $.get('https://raw.githubusercontent.com/levitzky1983/git-practic/master/modul_add.json', (function(data) {
+                var response = JSON.parse(data);
+                if (response.result === 1) {
+                    alert(response.message);
+                    var comments = commentsAll.html();
+                    comments += this.render();
+                    commentsAll.html(comments);
+                } else {
+                    alert("Ошибка запроса");
+                }
+            }).bind(this));
+        }
+
+        //на кнопку Добавить отзыв навешиваем функцию создания нового обьекта класса Comments и запуск его метода добавления
+        btnAppend.click(function() {
+            commentId++;
+            var newItem = new Comment(commentId, authorComment.val(), textAreaComment.val(), false);
+            if (textAreaComment.val() && authorComment.val()) {
+                newItem.addComment();
+            }
+        });
+
+        //удаление отзыва с помощью метода класса Comment не получилось, пришлось сделать с помощью функции
+        function deleteComment(id) {
+            $.get('https://raw.githubusercontent.com/levitzky1983/git-practic/master/modul_res_1.json', function(data) {
+                var response = JSON.parse(data);
+                if (response.result === 1) {
+                    document.getElementById(id).remove();
+                } else {
+                    alert('Ошибка');
+                }
+            })
+        }
+
+        //одобрение отзыва анологично удалению. Если сделать с помощью метода класса Comment, то не знаю как запустить этот метод.(как обратиться к объекту?)
+        function approveComment(id) {
+            $.get('https://raw.githubusercontent.com/levitzky1983/git-practic/master/modul_res_1.json', function(data) {
+                var response = JSON.parse(data);
+                if (response.result === 1) {
+                    $("#deleteComment-" + id).remove();
+                    $("#approveComment-" + id).remove();
+                } else {
+                    alert('Ошибка');
+                }
+            })
+        }
+
+    </script>
+</body>
+
+</html>
