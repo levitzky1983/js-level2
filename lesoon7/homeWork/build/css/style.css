@@ -1,0 +1,91 @@
+html, body {
+  font-size: 10px;
+  font-family: "Arial", "Helvetica", sans-serif;
+  margin: 0;
+  padding: i;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #52524f; }
+
+.wrap {
+  width: 90%;
+  position: relative;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap; }
+  .wrap h1 {
+    width: 100%;
+    text-align: center; }
+  .wrap .slider {
+    position: relative;
+    width: 60%;
+    border: 5px solid yellowgreen;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    overflow: hidden; }
+    .wrap .slider .preview {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap; }
+      .wrap .slider .preview li:first-child {
+        margin-left: -40px; }
+      .wrap .slider .preview .image {
+        position: relative;
+        list-style: none;
+        opacity: 0.2; }
+  .wrap .left {
+    position: absolute;
+    left: 10%;
+    top: 15%;
+    background-color: transparent;
+    border: 20px solid transparent;
+    border-right: 20px solid rgba(30, 221, 110, 0.5);
+    outline: none; }
+    .wrap .left:hover {
+      border-right-color: #1edd6e;
+      cursor: pointer; }
+  .wrap .right {
+    position: absolute;
+    left: 85%;
+    top: 15%;
+    background-color: transparent;
+    border: 20px solid transparent;
+    border-left: 20px solid rgba(30, 221, 110, 0.5);
+    outline: none; }
+    .wrap .right:hover {
+      border-left-color: #1edd6e;
+      cursor: pointer; }
+  .wrap .slideBlock {
+    margin-top: 50px; }
+
+.opacity {
+  opacity: 1 !important; }
