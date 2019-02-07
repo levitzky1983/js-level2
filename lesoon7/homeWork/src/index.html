@@ -7,15 +7,14 @@
 </head>
 <body>
     <div class="wrap">
-       <h1>Слайдер</h1>
-       <div id = "slider" class="slider"></div>
-       <button id='left' class="left"></button> 
-       <button id='right' class="right"></button>
-       <div class="imageBig"></div>
+        <h1>Слайдер</h1>
+        <div id = "slider" class="slider"></div>
+        <button id='left' class="left" onclick="moveSlideLeft()"></button> 
+        <button id='right' class="right" onclick="moveSlideRight()"></button>
+        <div class="slideBlock"></div>
     </div>
-    
-    <!--build:js js/main.min.js -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!--build:js js/main.min.js -->
     <script src="js/script.js"></script>
     <!-- endbuild -->
 </body>

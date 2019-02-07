@@ -39,7 +39,7 @@ gulp.task('sass', function () {
 gulp.task('html', function() {
   return gulp.src('src/**/*.html')
   .pipe(validator())
-  .pipe(gulp.dest('build/'))
+  .pipe(gulp.dest('build'))
   .pipe(browserSync.reload({
     stream: true
   }));
@@ -49,9 +49,9 @@ gulp.task('js', function () {
   return gulp.src('src/js/**/*.js')
   .pipe(gulp.dest('build/js/'))
   .pipe(browserSync.reload({
-  stream: true
+      stream: true
   }));
-  });
+});
 
 
 
@@ -88,6 +88,18 @@ gulp.task('useref', function () {
   .pipe(gulpif('*.css', cleanCSS()))
   .pipe(gulp.dest('build'));
   });
+
+  //var gulp = require('gulp');
+  var minifyCSS = require('gulp-minify-css');
+  var sourcemaps = require('gulp-sourcemaps');
+   
+  gulp.task('minify-css', function() {
+    return gulp.src('./build/**/*.css')
+      .pipe(sourcemaps.init())
+      .pipe(minifyCSS())
+      .pipe(sourcemaps.write())
+      .pipe(gulp.dest('build/css'));
+  }); 
 
 
 
