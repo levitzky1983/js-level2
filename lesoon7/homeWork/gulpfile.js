@@ -89,7 +89,7 @@ gulp.task('useref', function () {
   .pipe(gulp.dest('build'));
   });
 
-  //var gulp = require('gulp');
+
   var minifyCSS = require('gulp-minify-css');
   var sourcemaps = require('gulp-sourcemaps');
    
