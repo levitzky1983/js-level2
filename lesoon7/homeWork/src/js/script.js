@@ -77,11 +77,11 @@ $(window).resize(function(){
 $(window).on('load',  function() {
     openSlide();
     $('#left').on('click',function() {
-      slide.remove();
+     // slide.remove();
       openSlide();
     })
     $('#right').on('click',function() {
-      slide.remove();
+     // slide.remove();
       openSlide();
     }) 
 });
