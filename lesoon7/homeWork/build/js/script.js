@@ -34,6 +34,8 @@ function Preview(id) {
         for(var index in this.children) {
           if (index == 1) {
             getActiveImg(this.children[index].id);
+            //показываем подсвеченный слайд из превью
+            openSlide();
           }
         }
     }).bind(this));  
@@ -66,29 +68,30 @@ Slide.prototype.remove = function() {
 //создаем объект превью
 var preview = new Preview("slidewrapper");
 
+
 //сделаем так, чтобы при изменении окна изменялся размер слайдера и размер img
 $(window).resize(function(){
   widthSlider = $('#slider').width();
   $('.item-img').width(widthSlider/3);
 });
 
-//после загрузки window показываем подсвеченный слайд из превью
+
 //вешаем на кнопки обработчики пролистывания на следующий слайд (удаление текущего и показ нового подсвеченного )
 $(window).on('load',  function() {
     openSlide();
     $('#left').on('click',function() {
-      slide.remove();
+     //slide.remove();
       openSlide();
     })
     $('#right').on('click',function() {
-      slide.remove();
+     // slide.remove();
       openSlide();
     }) 
 });
 
 //функция, которая выбирает из слайдов превью подсвеченный и показывает его 
 function openSlide () {
-    let $arrImg = $('.image');
+    var $arrImg = $('.image');
     for (index in $arrImg) {
       if ($arrImg.eq(index).hasClass('opacity')) {
         var href = $arrImg.eq(index).children().attr('src');

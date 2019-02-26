@@ -1,0 +1,30 @@
+.basket {
+  display: block;
+  border: 2px solid #333;
+  min-height: 100px;
+  padding: 20px;
+  background: rgba(0, 255, 0, 0.1);
+}
+
+.basket_item {
+  border: 2px solid green;
+  min-height: 40px;
+  margin: 5px;
+}
+
+.item_list {
+  display: flex;
+  flex-wrap: wrap;
+  border: 2px solid brown;
+  padding: 20px;
+}
+
+.item {
+  border: 2px solid green;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  height: 200px;
+  width: 140px;
+  flex-shrink: 0;
+  background: white;
+}
